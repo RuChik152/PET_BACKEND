@@ -1,6 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"
+import mongoose from "mongoose";
+import {UserRegModel} from "./model";
 
 const mockData = {
     email: 'test@test.test',
@@ -17,12 +19,21 @@ export const route = express.Router();
 
 route.post('/signup', async (req, res) => {
     try {
-        //***...тут должна быть реализация записи в БД
+        const check = await UserRegModel.findOne({ email: req.body.email });
 
-        const hashPassword = await bcrypt.hash(mockData.password, 10);
-        console.log('hashPassword => ', hashPassword)
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.status(200).json({});
+        if(!check) {
+            const createUser = await UserRegModel.create(req.body);
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.status(200).json({create: true, error: null, data: createUser,});
+        } else {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.status(418).json({ create: false, error: 'This is email busy', data: null });
+        }
+
+        // const hashPassword = await bcrypt.hash(mockData.password, 10);
+        // console.log('hashPassword => ', hashPassword)
+        // res.setHeader('Access-Control-Allow-Origin', '*');
+        // res.status(200).json({});
     }catch (error){
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({ ERROR: true, detailError: error });
