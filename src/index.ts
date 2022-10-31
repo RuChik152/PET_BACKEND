@@ -3,13 +3,14 @@ import cors from "cors"
 import path from "path"
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import {srv_params} from "./system/config.server";
+import {connect_db, srv_params} from "./system/config.server";
 import {mainMiddleWare} from "./midelware";
 import {route} from "./authorisation";
 
 
 dotenv.config()
 const app = express();
+connect_db();
 
 app.use(cors());
 app.use(express.json());
