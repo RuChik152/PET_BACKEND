@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import {connect_db, srv_params} from "./system/config.server";
 import {mainMiddleWare} from "./midelware";
 import {route} from "./authorisation";
+import {routeProduct} from "./product";
+
 
 
 dotenv.config()
@@ -27,9 +29,13 @@ app.use(mainMiddleWare);
 
 app.use('/auth', route);
 
+app.use('/product', routeProduct);
+
 //Тестовый эдпоинт
 app.get("/test", async (req, res) => {
     console.log('test_REQ', req.body);
     res.status(200).json(req.body);
 })
+
+
 
