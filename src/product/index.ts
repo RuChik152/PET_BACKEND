@@ -82,19 +82,19 @@ routeProduct.post('/create/category', async (req, res) => {
 routeProduct.post('/create/categodry/v1',   async (req, res) => {
 
         // @ts-ignore
-        const test = await ModelCreateGroupProduct.findById(req.body._id)
-        await console.log('test', test);
+        const group = await ModelCreateGroupProduct.findById(req.body._id)
+        await console.log('test', group);
         // @ts-ignore
-        const test2 = await test.categoryList;
-        await console.log('test2', test2);
+        const category = await group.categoryList;
+        await console.log('category_list', category);
         function check (){
-            return test2 === undefined;
+            return category === undefined;
         }
         //const check = await () => categoryList === undefined;
         await console.log('check', check());
-        await console.log('length', test2.length);
+        await console.log('category_length', category.length);
 
-        if(test2.length === 0){
+        if(category.length === 0){
             ModelCreateGroupProduct.findOneAndUpdate({_id: req.body._id}, { $push: { categoryList: req.body.category }}, (err: any, data: any) => {
                 if(err){
                     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -104,10 +104,10 @@ routeProduct.post('/create/categodry/v1',   async (req, res) => {
                     res.status(200).json({status: true, ERROR: false, massage: "category created", data});
                 }
             });
-        }else if (test2.length !== 0){
-            const check_2 = await test2.findIndex((item) => item.name == req.body.category.name);
-            await console.log('check_2', check_2);
-            if(check_2 === -1){
+        }else if (category.length !== 0){
+            const check = await category.findIndex((item) => item.name == req.body.category.name);
+            await console.log('check_2', check);
+            if(check === -1){
                 ModelCreateGroupProduct.findOneAndUpdate({_id: req.body._id}, { $push: { categoryList: req.body.category }}, (err: any, data: any) => {
                     if(err){
                         res.setHeader('Access-Control-Allow-Origin', '*');
