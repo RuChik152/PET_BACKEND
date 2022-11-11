@@ -1,4 +1,4 @@
-import {Schema, model} from "mongoose";
+import mongoose, {Schema, model} from "mongoose";
 
 const SchemaCreateProduct = new Schema({
     name:{
@@ -7,11 +7,11 @@ const SchemaCreateProduct = new Schema({
     },
     description: {
         type: String,
-        required: true
+        default: 'Description is not exist'
     },
     price: {
-        type: String,
-        required: true
+        type: Number,
+        default: 0
     },
     count: {
         type: Number,
@@ -24,6 +24,16 @@ const SchemaCreateProduct = new Schema({
     discount: {
         type: Number,
         default: 0
+    },
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ModelCreateGroupProduct',
+        required: true
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ModelCreateCategoryProduct',
+        required: true
     }
 }, {
     timestamps:true,
@@ -40,12 +50,11 @@ const SchemaCreateCategoryProduct = new Schema({
         type: String,
         required: true
     },
-    productList: [ModelCreateProduct.schema]
 }, {
     timestamps: true
 });
 
-export const ModelCreateCategoryProduct = model('ModelCreateCategoryProduct', SchemaCreateCategoryProduct, 'products');
+export const ModelCreateCategoryProduct = model('ModelCreateCategoryProduct', SchemaCreateCategoryProduct, 'categoryProduct');
 
 const SchemaCreateGroupProduct = new Schema({
     name:{
@@ -56,9 +65,8 @@ const SchemaCreateGroupProduct = new Schema({
         type: String,
         required: true
     },
-    categoryList: [ModelCreateCategoryProduct.schema]
 }, {
     timestamps: true
 });
 
-export const ModelCreateGroupProduct = model('ModelCreateGroupProduct', SchemaCreateGroupProduct, 'products');
+export const ModelCreateGroupProduct = model('ModelCreateGroupProduct', SchemaCreateGroupProduct, 'groupProduct');
