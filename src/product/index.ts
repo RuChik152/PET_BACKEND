@@ -1,5 +1,6 @@
 import express from "express";
 import {ModelCreateCategoryProduct, ModelCreateGroupProduct, ModelCreateProduct} from "./model";
+import * as Module from "module";
 
 export const routeProduct = express.Router();
 
@@ -19,6 +20,35 @@ routeProduct.post('/create/group/v1', async (req, res) => {
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
 });
+
+routeProduct.put('/update/group/v1', async (req, res) => {
+    try {
+        const group = await ModelCreateGroupProduct.findOneAndUpdate({ _id: req.body._id}, { name: req.body.description });
+        const newGroup = await ModelCreateProduct.findOne({ _id: req.body._id});
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(200).json({status: true, ERROR: null, massage: "group update", data: newGroup});
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+});
+
+routeProduct.delete('/delete/group/v1/:id', async (req, res) => {
+    try {
+        const search = await ModelCreateProduct.find({ group: req.params.id });
+        if(search.length === 0){
+            const  group = await ModelCreateGroupProduct.findOneAndDelete({_id: req.params.id});
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.status(200).json({status: true, ERROR: null, massage: 'group deleted'});
+        } else {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.status(200).json({status: false, ERROR: null, massage: 'group not deleted, dependent products exist'});
+        }
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+})
 
 interface Product {
     name: string;
@@ -46,6 +76,34 @@ routeProduct.post('/create/categodry/v1', async (req, res) => {
     }
 });
 
+routeProduct.put('/update/categodry/v1', async (req, res) => {
+    try {
+        const category = await ModelCreateCategoryProduct.findOneAndUpdate({ _id: req.body._id}, { name: req.body.name });
+        const newCategory = await ModelCreateCategoryProduct.findOne({ _id: req.body._id});
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(200).json({status: true, ERROR: null, massage: "category update", data: newCategory});
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+});
+
+routeProduct.delete('/delete/categodry/v1/:id', async (req, res) => {
+    try {
+        const search = await ModelCreateProduct.find({ category: req.params.id });
+        if(search.length === 0){
+            const  category = await ModelCreateCategoryProduct.findOneAndDelete({_id: req.params.id});
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.status(200).json({status: true, ERROR: null, massage: 'category deleted', data: category});
+        } else {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.status(200).json({status: false, ERROR: null, massage: 'category not deleted, dependent products exist', data: search});
+        }
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+})
 
 routeProduct.post('/create/product/v1', async (req, res) => {
     try {
@@ -102,3 +160,4 @@ routeProduct.get('/:id', async (req, res) => {
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
 })
+
