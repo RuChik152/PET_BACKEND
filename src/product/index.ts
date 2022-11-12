@@ -21,7 +21,7 @@ routeProduct.get('/group/v1', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 routeProduct.get('/group/v1/:id', async (req, res) => {
     try {
@@ -33,7 +33,7 @@ routeProduct.get('/group/v1/:id', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 routeProduct.post('/create/group/v1', async (req, res) => {
     try {
@@ -79,7 +79,7 @@ routeProduct.delete('/delete/group/v1/:id', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 
 routeProduct.get('/categodry/v1', async (req, res) => {
@@ -92,7 +92,7 @@ routeProduct.get('/categodry/v1', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 routeProduct.get('/categodry/v1/:id', async (req, res) => {
     try {
@@ -104,7 +104,7 @@ routeProduct.get('/categodry/v1/:id', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 routeProduct.post('/create/categodry/v1', async (req, res) => {
     try {
@@ -150,7 +150,7 @@ routeProduct.delete('/delete/categodry/v1/:id', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 
 
@@ -198,7 +198,7 @@ routeProduct.delete('/delete/product/v1/:id', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 routeProduct.get('/all', async (req, res) => {
     try {
@@ -209,7 +209,7 @@ routeProduct.get('/all', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
 routeProduct.get('/:id', async (req, res) => {
     try {
@@ -238,5 +238,5 @@ routeProduct.get('/:id', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({status: false, ERROR: true, massage: error});
     }
-})
+});
 
