@@ -1,8 +1,39 @@
 import express from "express";
 import {ModelCreateCategoryProduct, ModelCreateGroupProduct, ModelCreateProduct} from "./model";
-import * as Module from "module";
+
+interface Product {
+    name: string;
+    description: string;
+    price: string;
+    count: number;
+    madeCountry:string;
+    discount:number;
+}
 
 export const routeProduct = express.Router();
+
+routeProduct.get('/group/v1', async (req, res) => {
+    try {
+        const groups = await ModelCreateGroupProduct.find({}, {id: 1, name: 1, description: 1});
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(200).json({status: false, ERROR: null, massage: "group founds", data: groups});
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+})
+
+routeProduct.get('/group/v1/:id', async (req, res) => {
+    try {
+        const groups = await ModelCreateGroupProduct.findOne({ _id: req.params.id }, {id: 1, name: 1, description: 1});
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(200).json({status: false, ERROR: null, massage: "group founds", data: groups});
+
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+})
 
 routeProduct.post('/create/group/v1', async (req, res) => {
     try {
@@ -23,8 +54,8 @@ routeProduct.post('/create/group/v1', async (req, res) => {
 
 routeProduct.put('/update/group/v1', async (req, res) => {
     try {
-        const group = await ModelCreateGroupProduct.findOneAndUpdate({ _id: req.body._id}, { name: req.body.description });
-        const newGroup = await ModelCreateProduct.findOne({ _id: req.body._id});
+        const group = await ModelCreateGroupProduct.findOneAndUpdate({ _id: req.body._id}, req.body.data);
+        const newGroup = await ModelCreateGroupProduct.findOne({ _id: req.body._id});
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(200).json({status: true, ERROR: null, massage: "group update", data: newGroup});
     } catch (error) {
@@ -50,14 +81,30 @@ routeProduct.delete('/delete/group/v1/:id', async (req, res) => {
     }
 })
 
-interface Product {
-    name: string;
-    description: string;
-    price: string;
-    count: number;
-    madeCountry:string;
-    discount:number;
-}
+
+routeProduct.get('/categodry/v1', async (req, res) => {
+    try {
+        const category = await ModelCreateCategoryProduct.find({}, {id: 1, name: 1, description: 1});
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(200).json({status: false, ERROR: null, massage: "category founds", data: category});
+
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+})
+
+routeProduct.get('/categodry/v1/:id', async (req, res) => {
+    try {
+        const category = await ModelCreateCategoryProduct.findOne({ _id: req.params.id }, {id: 1, name: 1, description: 1});
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(200).json({status: false, ERROR: null, massage: "category founds", data: category});
+
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+})
 
 routeProduct.post('/create/categodry/v1', async (req, res) => {
     try {
@@ -78,7 +125,7 @@ routeProduct.post('/create/categodry/v1', async (req, res) => {
 
 routeProduct.put('/update/categodry/v1', async (req, res) => {
     try {
-        const category = await ModelCreateCategoryProduct.findOneAndUpdate({ _id: req.body._id}, { name: req.body.name });
+        const category = await ModelCreateCategoryProduct.findOneAndUpdate({ _id: req.body._id}, req.body.data );
         const newCategory = await ModelCreateCategoryProduct.findOne({ _id: req.body._id});
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(200).json({status: true, ERROR: null, massage: "category update", data: newCategory});
@@ -105,6 +152,8 @@ routeProduct.delete('/delete/categodry/v1/:id', async (req, res) => {
     }
 })
 
+
+
 routeProduct.post('/create/product/v1', async (req, res) => {
     try {
         const  check = await ModelCreateProduct.findOne({name: req.body.name});
@@ -122,6 +171,35 @@ routeProduct.post('/create/product/v1', async (req, res) => {
     }
 });
 
+routeProduct.put('/update/product/v1', async (req, res) => {
+    try {
+        const product = await ModelCreateProduct.findOneAndUpdate({ _id: req.body._id}, req.body.data );
+        const newProduct = await ModelCreateProduct.findOne({ _id: req.body._id});
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(200).json({status: true, ERROR: null, massage: "product update", data: newProduct});
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+});
+
+routeProduct.delete('/delete/product/v1/:id', async (req, res) => {
+    try {
+         ModelCreateProduct.findOneAndDelete({_id: req.params.id},{},(err, doc) => {
+           if(err){
+               res.setHeader('Access-Control-Allow-Origin', '*');
+               res.status(401).json({status: false, ERROR: true, massage: 'Deleted not success', data: err});
+           } else {
+               res.setHeader('Access-Control-Allow-Origin', '*');
+               res.status(401).json({status: true, ERROR: false, massage: 'Deleted success', data: doc});
+           }
+        })
+    } catch (error) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.status(500).json({status: false, ERROR: true, massage: error});
+    }
+})
+
 routeProduct.get('/all', async (req, res) => {
     try {
         const products = await ModelCreateProduct.find().populate('group').populate('category');
@@ -135,6 +213,7 @@ routeProduct.get('/all', async (req, res) => {
 
 routeProduct.get('/:id', async (req, res) => {
     try {
+        //const test = await ModelCreateProduct.findOne({_id: req.params.id}, { name:1, count:1, _id: 1, group:1, category:1 }).populate('group', {name:1}).populate('category', {name:1});
         // @ts-ignore
         const { _id, name, description, price, count, discount, group, category } = await ModelCreateProduct.findOne({_id: req.params.id}).populate('group').populate('category');
         const product = {

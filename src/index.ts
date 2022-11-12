@@ -10,6 +10,7 @@ import {routeProduct} from "./product";
 
 
 
+
 dotenv.config()
 const app = express();
 connect_db();
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
-const server = app.listen(srv_params.PORT, () => {
+export const server = app.listen(srv_params.PORT, () => {
     console.log('SERVER_LOGS => ', srv_params.DESCRIPTION);
 })
 
